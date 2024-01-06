@@ -66,6 +66,8 @@ class LatexEnv(LatexAction):
         
     def __call__(self, t):
         self.set_content(t)
+        if not isinstance(self.content, str):
+            self.content = '\n'.join(self.content)
         if self.option is None:
             return f"""\\begin{{{self.env}}}
 {self.content}
@@ -132,17 +134,12 @@ class LatexList(LatexEnv):
         self.content = t
 
 
-def tabular(t):
+def table_to_latex(t):
     import pandas as pd
     col = len(t['head'])
     assert all(l == col for l in map(len, t['body'])), Exception("t['body'] should has the same column with t['head']!")
-    return pd.DataFrame(columns=t['head'], data=t['body']).to_latex(index=False)
-
-def table(t):
-    import pandas as pd
-    col = len(t['head'])
-    assert all(l == col for l in map(len, t['body'])), Exception("t['body'] should has the same column with t['head']!")
-    return pd.DataFrame(columns=t['head'], data=t['body']).to_latex(index=False, caption=t['caption'])
+    caption = t.get('caption', None)
+    return pd.DataFrame(columns=t['head'], data=t['body']).to_latex(index=False, caption=caption)
 
 def list_exercise(t):
     return '\\ex\n\n' + '\n\n'.join(f"""\\begin{{exercise}}

@@ -3,8 +3,14 @@
 
 from mathdown import *
 
+# print(equation.transform_string(r"""$$
+# W(\gamma):=\sum_{k\in \mathcal{Z}}\sum_{\gamma(x_i)=k}\|x_i-\mu_k\|^2,
+# $$
+# """))
 
-print(chapter.parse_string(r"""# 聚类
+# raise
+
+print(chapter.transform_string(r"""# 聚类
 
 这一章开始介绍一种无监督学习：聚类。聚类就是分类的无监督版本。从某种意义上说，分类最终也是聚类，因为训练样本中标签的设置不总是天然的，也只是人类思维的产物，而在人类的思维活动之中没有明确的类别线索。
 
@@ -23,7 +29,6 @@ print(chapter.parse_string(r"""# 聚类
 K-means聚类是最早的一类聚类算法。大家熟知的解释并不是基于统计学的，而是构造所谓的“**能量函数**”直接评价每种聚类的优劣。能量函数的最小点代表了最佳聚类。正如一般的机器学习模型总和某个统计模型存在联系，K-means聚类也和统计模型有联系。本节，我们先来认识能量函数，然后给出其包括统计模型在内的多种等价形式。
 
 **约定** $\|x\|$表示由内积$\langle \cdot,\cdot\rangle$导出的范数，在Euclidean空间$\R^n$中，可以代表任何形如$x^TAx$的二次型，其中$A$是一个给定的对称正定矩阵。对应的Frobenius 矩阵范数为$\|X\|_F:=\mathrm{tr}(X^TAX)$。分类器是映射$\gamma:\mathcal{X}\to \mathcal{Z}$，其中$\mathcal{X}$是样本空间，$\mathcal{Z}$是类别标签集。$\mathcal{Z}$元素个数，称为聚类数，总用$K$表示。$N_z$始终表示被标记为$z$类的子样本大小，即$N(\gamma(x_i)=z)$。
-
 
 ### 模型与算法
 如前文所述，聚类没有标签数据，不能像分类问题那样构造基于预测的损失函数来判断分类器本身的好坏。尽管如此，我们依然可以为点集$\mathcal{X}\subset\R^p$上的一个分类器$\gamma$构造损失函数，即能量函数，
