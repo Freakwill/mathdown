@@ -18,6 +18,7 @@ NL = pp.LineEnd()
 single_newline = NL + ~pp.FollowedBy(NL)
 order_number = pp.common.integer + pp.Literal('. ').leave_whitespace()
 strict_single_newline = NL + ~pp.FollowedBy(NL | pp.one_of(BEGIN_SYMBLES + KEYWORDS_STAR) | order_number)
+star_single_newline = NL + ~pp.FollowedBy(NL | pp.one_of(KEYWORDS_STAR))
 
 one_or_more_newlines = NL[1, ...].suppress()
 zero_or_more_newlines = NL[0, ...]
@@ -71,7 +72,7 @@ table = table_head('head') + single_newline.suppress() + table_line.suppress() +
 table_with_caption = (center('caption') + one_or_more_newlines + table) | table
 table_with_caption.set_parse_action(table_to_latex)
 
-paragraph = code | table_with_caption | centering | figure | pp.DelimitedList(ulist | olist | div, single_newline)
+paragraph = code | table_with_caption | centering | figure | pp.DelimitedList(ulist | olist | div, star_single_newline)
 
 remark_key = pp.Suppress('*注*')
 example_key = pp.Suppress('*例*')
@@ -130,7 +131,7 @@ subsubsection_title.set_parse_action(LatexCommand('subsubsection'))
 
 comment = pp.QuotedString('<!--', end_quote_char='-->', multiline=True)('body').set_parse_action(lambda t: latex_comment(t[0]))
 
-block = (definition | pp.Combine( (fact | theorem) + pp.Optional(one_or_more_newlines + proof), join_string='\n') | algorithm | remarks | example | denotation)
+block = (definition | pp.Combine( (fact | theorem) + pp.Optional(one_or_more_newlines + proof), adjacent=False, join_string='\n') | algorithm | remarks | example | denotation)
 
 text = pp.DelimitedList(comment | block | paragraph, one_or_more_newlines).set_parse_action('\n\n'.join)
 
