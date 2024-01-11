@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+The parser of mathdown
+"""
+
 import pyparsing as pp
 import pyparsing.unicode as ppu
 
